@@ -1,5 +1,5 @@
 // LoginPage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,25 @@ import {
   Image,
   KeyboardAvoidingView,
   ScrollView,
+  LogBox,
 } from 'react-native';
+import Splash from '../components/Splash';
 
 export default function LoginPage({ navigation }) {
+  LogBox.ignoreLogs(['Warning: ...']);
+
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [autoLogin, setAutoLogin] = useState(false);
-
+  const [isReady,setIsReady] = useState(true)
+  useEffect(()=>{
+        setTimeout(()=>{
+        setIsReady(false)
+      },3000)
+     
+    },[])
+  
   const handleLogin = () => {
     console.log('로그인 시도:', id, password);
   };
@@ -29,7 +40,8 @@ export default function LoginPage({ navigation }) {
     console.log('회원가입 시도');
   };
 
-  return (
+  return isReady ? <Splash/> : (
+
     <KeyboardAvoidingView style={styles.container} behavior="height">
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -45,9 +57,9 @@ export default function LoginPage({ navigation }) {
           <Text style={styles.tagline}>마음속 날씨를 맑게 환기하는 시간</Text>
         </View>
 
-        {/* 입력 영역 */}
+        /* 입력 영역 */
         <View style={styles.inputArea}>
-          {/* 아이디 입력 */}
+          /* 아이디 입력 */
           <TextInput
             style={styles.input}
             placeholder="아이디 입력"
@@ -58,7 +70,7 @@ export default function LoginPage({ navigation }) {
             keyboardType="email-address"
           />
 
-          {/* 비밀번호 입력 */}
+          /* 비밀번호 입력 */
           <View style={styles.passwordWrapper}>
             <TextInput
               style={styles.passwordInput}
@@ -80,10 +92,10 @@ export default function LoginPage({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          {/* 자동 로그인 체크박스 */}
+          /* 자동 로그인 체크박스 */
           <TouchableOpacity
             style={styles.autoLoginRow}
-            onPress={() => setAutoLogin(prev => !prev)}
+            onPress={() => setAutoLogin(prev => !prev)}//자동로그인 플레그 전달 필요
             activeOpacity={0.7}
           >
             <View style={[styles.checkbox, autoLogin && styles.checkboxChecked]}>
@@ -93,7 +105,7 @@ export default function LoginPage({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* 로그인 버튼 */}
+        /* 로그인 버튼 */
         <TouchableOpacity
           style={[styles.loginButton, (!id || !password) && styles.loginButtonDisabled]}
           onPress={handleLogin}
@@ -102,7 +114,7 @@ export default function LoginPage({ navigation }) {
           <Text style={styles.loginButtonText}>로그인</Text>
         </TouchableOpacity>
 
-        {/* 카카오 로그인 버튼 */}
+        /* 카카오 로그인 버튼 */
         <TouchableOpacity style={styles.kakaoButton} onPress={handleKakaoLogin}>
           <Image
             source={require('../assets/Login/kakaoLogo.png')}
@@ -112,7 +124,7 @@ export default function LoginPage({ navigation }) {
           <Text style={styles.kakaoButtonText}>카카오톡으로 로그인</Text>
         </TouchableOpacity>
 
-        {/* 이메일로 회원가입 */}
+        /* 이메일로 회원가입 */
         <TouchableOpacity onPress={handleSignUp}>
           <Text style={styles.SignUp}>회원가입</Text>
         </TouchableOpacity>
